@@ -26,6 +26,16 @@ def generate_launch_description():
             default_value="30",
             description="Framerate of the video stream."
         ),
+        DeclareLaunchArgument(
+            "frame_id",
+            default_value="camera_frame",
+            description="Frame ID of the camera."
+        ),
+        DeclareLaunchArgument(
+            "topic_name",
+            default_value="image_raw",
+            description="Topic name for the camera images."
+        ),
     ]
 
     container = ComposableNodeContainer(
@@ -42,6 +52,8 @@ def generate_launch_description():
                     'video_width': LaunchConfiguration('video_width'),
                     'video_height': LaunchConfiguration('video_height'),
                     'framerate': LaunchConfiguration('framerate'),
+                    'frame_id': LaunchConfiguration('frame_id'),
+                    'topic_name': LaunchConfiguration('topic_name'),
                 }]
             ),
         ],

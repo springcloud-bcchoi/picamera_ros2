@@ -12,6 +12,10 @@ PiCameraROS::PiCameraROS(const rclcpp::NodeOptions &options_): Node("picamera_ro
     this->declare_parameter("framerate", 30);
     this->declare_parameter("hdr", true);
     this->declare_parameter("verbose", false);
+    this->declare_parameter("frame_id", "camera_frame");
+    this->declare_parameter("topic_name", "image_raw");
+    this->get_parameter("frame_id", this->frame_id_);
+    this->get_parameter("topic_name", this->topic_name_);
 
     this->get_parameter("video_width", this->video_width_);
     this->get_parameter("video_height", this->video_height_);
@@ -27,7 +31,7 @@ PiCameraROS::PiCameraROS(const rclcpp::NodeOptions &options_): Node("picamera_ro
     this->camera_->hdrOpen(this->hdr_);
     this->camera_->startVideo();
 
-    this->image_pub_ = this->create_publisher<sensor_msgs::msg::Image>("image_raw", 10);
+    this->image_pub_ = this->create_publisher<sensor_msgs::msg::Image>(this->topic_name_, 10);
     this->timer_ = this->create_wall_timer(std::chrono::milliseconds(1000 / this->framerate_), std::bind(&PiCameraROS::timerCallback, this));
 }
 
@@ -43,6 +47,8 @@ void PiCameraROS::timerCallback()
     cv::Mat image;
 
     cv_image.encoding = sensor_msgs::image_encodings::BGR8;
+    cv_image.header.frame_id = this->frame_id_;
+
     this->camera_->getVideoFrame(image, 1000);
     cv_image.image = image;
     cv_image.toImageMsg(image_msg);
