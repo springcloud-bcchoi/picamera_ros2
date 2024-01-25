@@ -36,11 +36,16 @@ def generate_launch_description():
             default_value="image_raw",
             description="Topic name for the camera images."
         ),
+        DeclareLaunchArgument(
+            "namespace",
+            default_value="",
+            description="Namespace for the nodes."
+        ),
     ]
 
     container = ComposableNodeContainer(
         name='picamera_ros2_container',
-        namespace='',
+        namespace=LaunchConfiguration('namespace'),
         package='rclcpp_components',
         executable='component_container',
         composable_node_descriptions=[
