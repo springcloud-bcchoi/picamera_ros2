@@ -29,6 +29,8 @@ private:
     int framerate_;
     bool verbose_;
     bool hdr_;
+    std::string frame_id_;
+    std::string topic_name_;
 
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr image_pub_;
